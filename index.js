@@ -1,18 +1,26 @@
-require('dotenv').config(); 
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
+
+// Middleware
 app.use(cors());
 app.use(express.json());
 
-// חיבור ל-Supabase באמצעות מפתחות האבטחה מהפרויקט שיצרנו
+// Initialize Supabase Client
 const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY; // משתמשים ב-Service Role לביצוע פעולות שרת
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+// Optional: Fallback check to prevent silent crashes if variables are missing
+if (!supabaseUrl || !supabaseKey) {
+  console.error('Missing Supabase environment variables! Check your .env file or Vercel settings.');
+}
+
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// 1. נתיב לרישום משתמש חדש במערכת
+// 1. Route to register a new user
 app.post('/api/register', async (req, res) => {
   try {
     const { full_name, email } = req.body;
@@ -29,7 +37,7 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
-// 2. נתיב לקישור מכשיר (Device ID) למשתמש בפעם הראשונה
+// 2. Route to link a device ID to a user
 app.post('/api/link-device', async (req, res) => {
   try {
     const { email, device_id } = req.body;
@@ -47,16 +55,14 @@ app.post('/api/link-device', async (req, res) => {
   }
 });
 
-// הפעלת השרת
-// הפעלת השרת במחשב המקומי (לוקאל)
+// Local server listener (skipped automatically on Vercel production)
 const PORT = process.env.PORT || 3000;
 if (process.env.NODE_ENV !== 'production') {
   app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running locally on port ${PORT}`);
   });
 }
 
-// ייצוא השרת עבור Vercel
+// Export the Express app for Vercel serverless deployment
 module.exports = app;
-
 
