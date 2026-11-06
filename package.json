@@ -11,6 +11,16 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YassMachSW/Attendance.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/YassMachSW/Attendance/issues"
+  },
+  "homepage": "https://github.com/YassMachSW/Attendance#readme"
 }
-
